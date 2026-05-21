@@ -114,3 +114,23 @@ button {
     background-color: #0f0f0f69;
   }
 }
+
+.stats-value {
+  padding: 1em;
+}
+
+.stat-row {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1em;
+  margin-bottom: 1em;
+  background-color: #444444;
+}
+
+.stats-controls {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1em;
+}
