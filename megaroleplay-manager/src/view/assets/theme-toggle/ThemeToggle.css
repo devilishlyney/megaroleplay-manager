@@ -1,0 +1,9 @@
+.theme-toggle {
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1px solid var(--primary);
+  background-color: var(--secondary);
+  color: var(--text);
+  cursor:crosshair;
+  transition: all 0.2s ease;
+}

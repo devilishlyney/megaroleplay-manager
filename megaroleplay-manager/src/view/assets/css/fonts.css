@@ -1,0 +1,13 @@
+@font-face {
+  font-family: 'Homenaje';
+  src: local('Homenaje'), url(../fonts/Homenaje-Regular.ttf) format('truetype');
+  /* other formats include: 'woff2', 'truetype, 'opentype',
+                            'embedded-opentype', and 'svg' */
+}
+
+@font-face {
+  font-family: 'Jaro';
+  src: local('Jaro'), url(../fonts/Jaro-Regular-VariableFont_opsz.ttf) format('truetype');
+  /* other formats include: 'woff2', 'truetype, 'opentype',
+                            'embedded-opentype', and 'svg' */
+}

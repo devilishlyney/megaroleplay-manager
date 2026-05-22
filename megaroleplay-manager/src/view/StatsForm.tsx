@@ -71,12 +71,12 @@ export default function StatsForm({ onNext }: { onNext: (stats: RawStats) => voi
   };
 
   return (
-    <div>
+    <div className="card">
       <h2>Ability Scores (Point Buy)</h2>
       
-      <div>
+      <div className="stats-container">
         {(Object.keys(stats) as StatName[]).map((stat) => (
-          <div key={stat} className="stat-row">
+          <div key={stat} className="stat-block">
             <label>
               {STAT_LABELS[stat]}
             </label>
@@ -84,7 +84,7 @@ export default function StatsForm({ onNext }: { onNext: (stats: RawStats) => voi
             <div className="stats-controls">
               <button
                 onClick={() => handleStatChange(stat, -1)}
-                disabled={stats[stat] <= MIN_STAT || calculatePointsUsed({...stats, [stat]: stats[stat]-1}) > TOTAL_POINTS}>
+                disabled={stats[stat] <= MIN_STAT || calculatePointsUsed({...stats, [stat]: stats[stat]-1}) > TOTAL_POINTS} className="stat-change-button">
                 -
               </button>
               
@@ -94,16 +94,16 @@ export default function StatsForm({ onNext }: { onNext: (stats: RawStats) => voi
               
               <button
                 onClick={() => handleStatChange(stat, 1)}
-                disabled={stats[stat] >= MAX_STAT || calculatePointsUsed({...stats, [stat]: stats[stat]+1}) > TOTAL_POINTS}>
+                disabled={stats[stat] >= MAX_STAT || calculatePointsUsed({...stats, [stat]: stats[stat]+1}) > TOTAL_POINTS} className="stat-change-button">
                 +
               </button>
             </div>
 
             <div>
-              Cost: {calculatePointsUsed({ ...stats, [stat]: stats[stat] }) - calculatePointsUsed(stats) + (stats[stat] === 8 ? 0 : 0)} 
+              Cost
               {/* Simplified display: just show the cost of the current value */}
               <span>
-                ({getStatCost(stats[stat])} pts)
+                : {getStatCost(stats[stat])} pts
               </span>
             </div>
           </div>
@@ -113,7 +113,7 @@ export default function StatsForm({ onNext }: { onNext: (stats: RawStats) => voi
       {/* Status Bar */}
       <div>
         <div>
-          <span>Points Used:</span>
+          <span>Points Used : </span>
           <span className={`font-bold ${pointsUsed > TOTAL_POINTS ? 'text-red-500' : 'text-green-400'}`}>
             {pointsUsed} / {TOTAL_POINTS}
           </span>
@@ -125,7 +125,8 @@ export default function StatsForm({ onNext }: { onNext: (stats: RawStats) => voi
           ></div>
         </div>
         <div>
-          Remaining: <span className={pointsRemaining === 0 ? 'text-green-400 font-bold' : 'text-yellow-400'}>
+          <span>Remaining : </span>
+          <span className={pointsRemaining === 0 ? 'text-green-400 font-bold' : 'text-yellow-400'}>
             {pointsRemaining}
           </span>
         </div>

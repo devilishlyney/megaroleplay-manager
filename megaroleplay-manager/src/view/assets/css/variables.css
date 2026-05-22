@@ -1,0 +1,19 @@
+:root { /* light mode */
+  --primary: #F8EAD8;
+  --secondary: #EDDBC7;
+  --tertiary: #ddc3be; /* à changer */
+  --background: #F9F5E7;
+  --text: #A7727D;
+
+  --font-s: 24px;
+  --font-m: 32px;
+  --font-l: 48px;
+}
+
+[data-theme='dark'] { /* dark mode */
+    --primary: #853953;
+    --secondary: #50253B;
+    --tertiary: #3a1d2e; /* à changer */
+    --background: #2C2C2C;
+    --text: #F3F4F4;
+}
