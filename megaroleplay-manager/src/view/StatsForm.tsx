@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from "react-router-dom";
 import { 
   RawStats, 
   StatName, 
@@ -29,6 +30,7 @@ const STAT_LABELS: Record<StatName, string> = {
 };
 
 export default function StatsForm({ onNext }: { onNext: (stats: RawStats) => void }) {
+  const navigate = useNavigate();
   const [stats, setStats] = useState<RawStats>(INITIAL_STATS);
   const [pointsUsed, setPointsUsed] = useState(0);
   const [pointsRemaining, setPointsRemaining] = useState(TOTAL_POINTS);
@@ -72,7 +74,8 @@ export default function StatsForm({ onNext }: { onNext: (stats: RawStats) => voi
 
   return (
     <div className="card">
-      <h2>Ability Scores (Point Buy)</h2>
+      <button onClick={() => navigate("/")}>Back</button>
+      <h2>Adjust your character's raw stats!</h2>
       
       <div className="stats-container">
         {(Object.keys(stats) as StatName[]).map((stat) => (

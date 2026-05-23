@@ -5,17 +5,48 @@
   color: var(--text);
   font-family: 'Homenaje', serif;
   font-size: var(--font-s);
+  text-align: center;
   transition: all 1s;
+  padding: 0;
+  margin: 0;
 }
 
-.card {
-  background-color: var(--secondary);
-  padding: 0.5em;
-  border-radius: 8px;
+body {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 2em;
+  min-height: 100vh;
+}
+
+/* ===========================================================
+   HEADINGS, TEXT
+   =========================================================== */
+
+h1 {
+  font-family: 'Jaro', serif;
+  font-size: var(--font-l);
+  line-height: 84.5%;
+}
+
+h2 {
+  font-size: var(--font-m);
+}
+
+h3 {
+  padding-top: 0.5em;
+}
+
+.card {
+  background-color: var(--secondary);
+  padding: 3em;
+  border-radius: var(--border-card);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3em;
 }
 
 .stats-value {
@@ -37,15 +68,21 @@
   margin-bottom: 1em;
   background-color: var(--primary);
   padding: 1em;
-  border-radius: 8px;
+  border-radius: var(--border-card);
+}
+
+.nav-btn-title {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
 }
 
 button {
-  background-color: var(--tertiary);
+  background-color: var(--primary);
   border: none;
-  padding: 0.5em;
-  border-radius: 4px;
-  border: 1px solid var(--primary);
+  padding: 0.75em 1.25em;
+  border-radius: var(--border-button);
+  border: 1px solid var(--tertiary);
 }
 
 button:disabled {
@@ -59,6 +96,7 @@ button:disabled {
   cursor: crosshair;
   font-size: var(--font-m);
   border-radius: 50%;
+  padding: 0;
   width: 2em;
   height: 2em;
   border: 4px solid var(--secondary);

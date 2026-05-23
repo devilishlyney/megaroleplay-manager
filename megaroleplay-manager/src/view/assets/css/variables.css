@@ -6,14 +6,17 @@
   --text: #A7727D;
 
   --font-s: 24px;
-  --font-m: 32px;
-  --font-l: 48px;
+  --font-m: 48px;
+  --font-l: 64px;
+
+  --border-card: 30px;
+  --border-button: 20px;
 }
 
 [data-theme='dark'] { /* dark mode */
     --primary: #853953;
     --secondary: #50253B;
-    --tertiary: #3a1d2e; /* à changer */
+    --tertiary: #3a1d2e;
     --background: #2C2C2C;
     --text: #F3F4F4;
 }

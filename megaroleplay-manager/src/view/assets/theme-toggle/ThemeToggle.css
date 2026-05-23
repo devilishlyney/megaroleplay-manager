@@ -5,5 +5,8 @@
   background-color: var(--secondary);
   color: var(--text);
   cursor:crosshair;
-  transition: all 0.2s ease;
+  transition: all 1s;
+  position: fixed;
+  top: 16px;
+  right: 16px;
 }
