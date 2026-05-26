@@ -73,77 +73,79 @@ export default function StatsForm({ onNext }: { onNext: (stats: RawStats) => voi
   };
 
   return (
-    <div className="card">
-      <button onClick={() => navigate("/")}>Back</button>
-      <h2>Adjust your character's raw stats!</h2>
-      
-      <div className="stats-container">
-        {(Object.keys(stats) as StatName[]).map((stat) => (
-          <div key={stat} className="stat-block">
-            <label>
-              {STAT_LABELS[stat]}
-            </label>
-            
-            <div className="stats-controls">
-              <button
-                onClick={() => handleStatChange(stat, -1)}
-                disabled={stats[stat] <= MIN_STAT || calculatePointsUsed({...stats, [stat]: stats[stat]-1}) > TOTAL_POINTS} className="stat-change-button">
-                -
-              </button>
+    <main className="container">
+      <div className="card">
+        <button onClick={() => navigate("/")}>Back</button>
+        <h2>Adjust your character's raw stats!</h2>
+        
+        <div className="stats-container">
+          {(Object.keys(stats) as StatName[]).map((stat) => (
+            <div key={stat} className="stat-block">
+              <label>
+                {STAT_LABELS[stat]}
+              </label>
               
-              <span className="stats-value">
-                {stats[stat]}
-              </span>
-              
-              <button
-                onClick={() => handleStatChange(stat, 1)}
-                disabled={stats[stat] >= MAX_STAT || calculatePointsUsed({...stats, [stat]: stats[stat]+1}) > TOTAL_POINTS} className="stat-change-button">
-                +
-              </button>
-            </div>
+              <div className="stats-controls">
+                <button
+                  onClick={() => handleStatChange(stat, -1)}
+                  disabled={stats[stat] <= MIN_STAT || calculatePointsUsed({...stats, [stat]: stats[stat]-1}) > TOTAL_POINTS} className="stat-change-button">
+                  -
+                </button>
+                
+                <span className="stats-value">
+                  {stats[stat]}
+                </span>
+                
+                <button
+                  onClick={() => handleStatChange(stat, 1)}
+                  disabled={stats[stat] >= MAX_STAT || calculatePointsUsed({...stats, [stat]: stats[stat]+1}) > TOTAL_POINTS} className="stat-change-button">
+                  +
+                </button>
+              </div>
 
-            <div>
-              Cost
-              {/* Simplified display: just show the cost of the current value */}
-              <span>
-                : {getStatCost(stats[stat])} pts
-              </span>
+              <div>
+                Cost
+                {/* Simplified display: just show the cost of the current value */}
+                <span>
+                  : {getStatCost(stats[stat])} pts
+                </span>
+              </div>
             </div>
+          ))}
+        </div>
+
+        {/* Status Bar */}
+        <div>
+          <div>
+            <span>Points Used : </span>
+            <span className={`font-bold ${pointsUsed > TOTAL_POINTS ? 'text-red-500' : 'text-green-400'}`}>
+              {pointsUsed} / {TOTAL_POINTS}
+            </span>
           </div>
-        ))}
+          <div>
+            <div 
+              className={`h-full transition-all duration-300 ${pointsUsed > TOTAL_POINTS ? 'bg-red-500' : 'bg-blue-500'}`}
+              style={{ width: `${Math.min((pointsUsed / TOTAL_POINTS) * 100, 100)}%` }}
+            ></div>
+          </div>
+          <div>
+            <span>Remaining : </span>
+            <span className={pointsRemaining === 0 ? 'text-green-400 font-bold' : 'text-yellow-400'}>
+              {pointsRemaining}
+            </span>
+          </div>
+        </div>
+
+        {error && (
+          <div>
+            {error}
+          </div>
+        )}
+
+        <button onClick={handleNext} disabled={pointsRemaining !== 0 || !!error}>
+          Next: Appearance
+        </button>
       </div>
-
-      {/* Status Bar */}
-      <div>
-        <div>
-          <span>Points Used : </span>
-          <span className={`font-bold ${pointsUsed > TOTAL_POINTS ? 'text-red-500' : 'text-green-400'}`}>
-            {pointsUsed} / {TOTAL_POINTS}
-          </span>
-        </div>
-        <div>
-          <div 
-            className={`h-full transition-all duration-300 ${pointsUsed > TOTAL_POINTS ? 'bg-red-500' : 'bg-blue-500'}`}
-            style={{ width: `${Math.min((pointsUsed / TOTAL_POINTS) * 100, 100)}%` }}
-          ></div>
-        </div>
-        <div>
-          <span>Remaining : </span>
-          <span className={pointsRemaining === 0 ? 'text-green-400 font-bold' : 'text-yellow-400'}>
-            {pointsRemaining}
-          </span>
-        </div>
-      </div>
-
-      {error && (
-        <div>
-          {error}
-        </div>
-      )}
-
-      <button onClick={handleNext} disabled={pointsRemaining !== 0 || !!error}>
-        Next: Appearance
-      </button>
-    </div>
+    </main>
   );
 }

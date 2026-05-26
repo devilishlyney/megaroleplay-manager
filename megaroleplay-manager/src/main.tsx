@@ -9,7 +9,10 @@ import { Routes, Route } from 'react-router-dom'
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
-    <ThemeToggle />
+    <header>
+      <ThemeToggle />
+      <button>Profile</button>
+    </header>
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<App />} />

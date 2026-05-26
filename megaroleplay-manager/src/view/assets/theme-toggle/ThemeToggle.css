@@ -6,7 +6,4 @@
   color: var(--text);
   cursor:crosshair;
   transition: all 1s;
-  position: fixed;
-  top: 16px;
-  right: 16px;
 }
