@@ -1,24 +1,29 @@
-import { useNavigate } from "react-router-dom";
-import "./view/assets/css/App.css";
+import { Routes, Route, Navigate } from 'react-router-dom'
+import Home from './view/page/Home'
+import ProtectedRoute from './view/component/ProtectedRoute'
+import Login from './view/page/Login'
+import Dashboard from './view/page/Dashboard' // You'll create this
+import CharacterCreator from './view/page/CharacterCreator' // Your wizard
 
 function App() {
-  const navigate = useNavigate();
-
   return (
-    <main className="container">
-      <div className="card">
-        <div className="title">
-          <h2>Welcome to</h2>
-          <h1>MegaRoleplay<br />Manager</h1>
-          <h3>The Unofficial D&D Management Tool</h3>
-        </div>
-        <div className="nav-btn-title">
-          <button onClick={() => navigate("/stats")}>Enter the Dungeon</button>
-          <button>Settings</button>
-        </div>
-      </div>
-    </main>
-  );
+    <Routes>
+      {/* Public Routes */}
+      <Route path="/login" element={<Login />} />
+      <Route path="/home" element={<Home />} />
+      
+      {/* Protected Routes */}
+      <Route element={<ProtectedRoute />}>
+        <Route path="/" element={<Home />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/create" element={<CharacterCreator />} />
+        {/* Add more protected routes here */}
+      </Route>
+      
+      {/* Catch all */}
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
+  )
 }
 
-export default App;
+export default App

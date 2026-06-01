@@ -4,6 +4,7 @@
   --tertiary: #ddc3be; /* à changer */
   --background: #F9F5E7;
   --text: #A7727D;
+  --highlight: #ff0080;
 
   --font-s: 24px;
   --font-m: 48px;
@@ -11,6 +12,7 @@
 
   --border-card: 30px;
   --border-button: 20px;
+  --border-input: 10px;
 }
 
 [data-theme='dark'] { /* dark mode */

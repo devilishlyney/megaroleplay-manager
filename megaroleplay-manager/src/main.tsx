@@ -2,22 +2,21 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter } from 'react-router-dom'
 import App from "./App";
-import StatsForm from "./view/StatsForm";
-import ThemeToggle from './view/assets/theme-toggle/ThemeToggle';
+import Header from './view/component/Header';
 import "./view/assets/css/App.css";
-import { Routes, Route } from 'react-router-dom'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { AuthProvider } from './controller/context/AuthContext';
 
+const queryClient = new QueryClient()
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
-    <header>
-      <ThemeToggle />
-      <button>Profile</button>
-    </header>
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<App />} />
-        <Route path="/stats" element={<StatsForm onNext={(stats) => console.log("Selected Stats:", stats)} />} />
-      </Routes>
-    </BrowserRouter>
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <BrowserRouter>
+          <Header />
+          <App />
+        </BrowserRouter>
+      </AuthProvider>
+    </QueryClientProvider>
   </React.StrictMode>,
 );

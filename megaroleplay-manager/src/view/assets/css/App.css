@@ -3,6 +3,7 @@
 
 * {
   color: var(--text);
+  font-weight: 400;
   font-family: 'Homenaje', serif;
   font-size: var(--font-s);
   text-align: center;
@@ -18,6 +19,7 @@ body {
   justify-content: center;
   gap: 2em;
   min-height: 100vh;
+  background-color: var(--background);
 }
 
 header {
@@ -54,6 +56,7 @@ h1 {
   font-family: 'Jaro', serif;
   font-size: var(--font-l);
   line-height: 84.5%;
+  margin: 0 0.75em;
 }
 
 h2 {
@@ -118,6 +121,12 @@ button:disabled {
   cursor: default;
 }
 
+.login-signup-btn {
+  padding: 0.25em 0;
+  margin: 0;
+  border-radius: var(--border-input);
+}
+
 .stat-change-button {
   color: var(--background);
   background-color: var(--text);
@@ -150,6 +159,31 @@ button:disabled {
   width: 1em;
   height: 1em;
   vertical-align: middle;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25em;
+  margin: 0 5em;
+}
+
+input {
+  padding: 0.5em;
+  border-radius: var(--border-input);
+  border: 1px solid var(--primary);
+  text-align: left;
+  color: black;
+}
+
+input:focus {
+  outline: 2px solid var(--highlight);
+  transition: all 0.1s;
+}
+
+.have-account {
+  display: flex;
+  flex-direction: column;
 }
 
 @media (prefers-color-scheme: dark) {
