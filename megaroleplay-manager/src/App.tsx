@@ -4,6 +4,7 @@ import ProtectedRoute from './view/component/ProtectedRoute'
 import Login from './view/page/Login'
 import Dashboard from './view/page/Dashboard' // You'll create this
 import CharacterCreator from './view/page/CharacterCreator' // Your wizard
+import UserProfile from './view/page/UserProfile'
 
 function App() {
   return (
@@ -17,7 +18,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/create" element={<CharacterCreator />} />
-        {/* Add more protected routes here */}
+        <Route path="/profile" element={<UserProfile />} />
       </Route>
       
       {/* Catch all */}
