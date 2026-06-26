@@ -1,9 +1,9 @@
 :root { /* light mode */
-  --primary: #F8EAD8;
-  --secondary: #EDDBC7;
-  --tertiary: #ddc3be; /* à changer */
-  --background: #F9F5E7;
-  --text: #A7727D;
+  --primary: #d8f8f5;
+  --secondary: #c7ede8;
+  --tertiary: #bedddc; /* à changer */
+  --background: #e7f9f9;
+  --text: #5a878a;
   --highlight: #ff0080;
 
   --font-s: 24px;
@@ -16,9 +16,9 @@
 }
 
 [data-theme='dark'] { /* dark mode */
-    --primary: #853953;
-    --secondary: #50253B;
-    --tertiary: #3a1d2e;
-    --background: #2C2C2C;
+    --primary: #394785;
+    --secondary: #252650;
+    --tertiary: #201d3a;
+    --background: #1d1d1d;
     --text: #F3F4F4;
 }
