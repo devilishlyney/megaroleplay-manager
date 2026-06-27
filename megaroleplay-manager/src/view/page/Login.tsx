@@ -24,6 +24,17 @@ export default function Login() {
     setLoading(true)
     setError('')
 
+    if (!isLogin) {
+      const validUsername = username.trim()
+      const usernamePattern = /^[a-z0-9._]+$/ // regex for lowercase letters, numbers, periods, and underscores
+
+      if (!usernamePattern.test(validUsername)) {
+        setError('Username can only contain lowercase letters, numbers, periods, and underscores.')
+        setLoading(false)
+        return
+      }
+    }
+
     try {
       if (isLogin) {
         await signIn(email, password)
@@ -32,7 +43,7 @@ export default function Login() {
         const data = await signUp(email, password, username)
         if (data?.user) {
           alert('Check your email for the confirmation link!')
-          setIsLogin(true) // Switch back to login view
+          setIsLogin(true) // Switch back to login
         }
       }
     } catch (err: any) {
@@ -42,7 +53,7 @@ export default function Login() {
     }
   }
 
-  return (
+  return ( // Page layout
     <div className="container">
       <div className="card">
         <h2>
@@ -51,14 +62,18 @@ export default function Login() {
         
         {error && <div>{error}</div>}
         
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit}> 
           {!isLogin && (
-            <input
+            <input 
               type="text"
               placeholder="Username"
               value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              onChange={(e) => setUsername(e.target.value.toLowerCase())}
               required={!isLogin}
+              minLength={3}
+              maxLength={30}
+              pattern="[a-z0-9._]+"
+              title="Use only lowercase letters, numbers, periods, and underscores."
             />
           )}
           <input

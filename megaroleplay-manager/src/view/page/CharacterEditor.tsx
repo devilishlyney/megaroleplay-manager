@@ -1,6 +1,5 @@
-// src/pages/CharacterCreator.tsx
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 import StatsForm from '../component/StatsForm'
 import AppearanceBuilder from '../component/AppearanceBuilder'
 import Summary from './Summary'
@@ -8,59 +7,108 @@ import { useCreatorStore } from '../../controller/store/useStore'
 import RacePicker from '../component/RacePicker'
 import ClassPicker from '../component/ClassPicker'
 import { useAuth } from '../../controller/context/AuthContext'
-import { createCharacter } from '../../controller/service/characterService'
+import { getCharacterById, updateCharacter } from '../../controller/service/characterService'
 
-export default function CharacterCreator() {
+const DEFAULT_STATS = {
+  strength: 8,
+  dexterity: 8,
+  constitution: 8,
+  intelligence: 8,
+  wisdom: 8,
+  charisma: 8,
+}
+
+export default function CharacterEditor() {
   const [currentStep, setCurrentStep] = useState(1)
   const [isSaving, setIsSaving] = useState(false)
   const [saveError, setSaveError] = useState<string | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+  const [loadError, setLoadError] = useState<string | null>(null)
   const navigate = useNavigate()
+  const { id } = useParams()
   const { user } = useAuth()
   const {
     name: characterName,
-    pronouns,
     appearance: appearanceSelection,
     rawStats,
     race,
     class: charClass,
     lore,
+    pronouns,
     setAppearance,
     setName,
     setPronouns,
     setRaceClass,
+    setStats,
     setLore,
     reset,
   } = useCreatorStore()
 
-  const handleNext = () => {
-    setCurrentStep(prev => prev + 1)
-  }
-
-  const handleBack = () => {
-    setCurrentStep(prev => Math.max(prev - 1, 1))
-  }
-
-  const handleFinish = async () => {
-    if (!user) {
-      setSaveError('You must be signed in to save a character.')
+  useEffect(() => {
+    if (!id) {
+      setLoadError('Missing character id.')
+      setIsLoading(false)
       return
     }
 
-    const stats = rawStats ?? {
-      strength: 8,
-      dexterity: 8,
-      constitution: 8,
-      intelligence: 8,
-      wisdom: 8,
-      charisma: 8,
+    let active = true
+
+    const loadCharacter = async () => {
+      try {
+        setIsLoading(true)
+        setLoadError(null)
+        reset()
+
+        const character = await getCharacterById(id)
+
+        if (!active) return
+
+        setName(character.name ?? '')
+        setPronouns(character.pronouns ?? '')
+        setRaceClass(character.race ?? '', character.class ?? '')
+        setStats(character.final_stats ?? character.base_stats ?? DEFAULT_STATS)
+        setAppearance(character.appearance ?? {})
+        setLore(character.lore ?? '')
+      } catch (error: any) {
+        if (active) {
+          setLoadError(error?.message || 'Failed to load character.')
+        }
+      } finally {
+        if (active) {
+          setIsLoading(false)
+        }
+      }
     }
+
+    loadCharacter()
+
+    return () => {
+      active = false
+      reset()
+    }
+  }, [id, reset, setAppearance, setLore, setName, setPronouns, setRaceClass, setStats])
+
+  const handleNext = () => {
+    setCurrentStep((prev) => prev + 1)
+  }
+
+  const handleBack = () => {
+    setCurrentStep((prev) => Math.max(prev - 1, 1))
+  }
+
+  const handleFinish = async () => {
+    if (!user || !id) {
+      setSaveError('You must be signed in to update a character.')
+      return
+    }
+
+    const stats = rawStats ?? DEFAULT_STATS
 
     setIsSaving(true)
     setSaveError(null)
 
     try {
-      await createCharacter({
-        owner_id: user.id,
+      await updateCharacter(id, {
         name: characterName,
         pronouns,
         race,
@@ -71,24 +119,31 @@ export default function CharacterCreator() {
         lore,
         level: 1,
       })
+
       reset()
-      navigate('/')
+      navigate('/characters')
     } catch (error: any) {
-      console.error('Failed to save character:', error)
-      setSaveError(error.message || 'Unable to save character.')
+      console.error('Failed to update character:', error)
+      setSaveError(error.message || 'Unable to update character.')
     } finally {
       setIsSaving(false)
     }
   }
 
+  if (isLoading) {
+    return <div>Loading character...</div>
+  }
+
+  if (loadError) {
+    return <div className="error">{loadError}</div>
+  }
+
   return (
     <div>
-      {/* Step Content */}
-
       {currentStep === 1 && (
-        <AppearanceBuilder 
+        <AppearanceBuilder
           onNext={handleNext}
-          onBack={() => navigate('/')}
+          onBack={() => navigate('/characters')}
           selection={appearanceSelection}
           onChange={(value) => setAppearance(value)}
           name={characterName}
@@ -97,11 +152,12 @@ export default function CharacterCreator() {
           onPronounsChange={setPronouns}
         />
       )}
+
       {currentStep === 2 && (
-        <RacePicker 
+        <RacePicker
           selectedRaceId={race}
           onSelect={(selectedRace) => {
-            setRaceClass(selectedRace.name, charClass || ''); // Update store
+            setRaceClass(selectedRace.name, charClass || '')
           }}
           onBack={handleBack}
           onNext={handleNext}
@@ -119,10 +175,8 @@ export default function CharacterCreator() {
         />
       )}
 
-      {currentStep === 4 && (
-        <StatsForm onNext={handleNext} onBack={handleBack} />
-      )}
-      
+      {currentStep === 4 && <StatsForm onNext={handleNext} onBack={handleBack} />}
+
       {currentStep === 5 && (
         <div className="card-large">
           <h2>Character Notes</h2>
@@ -142,9 +196,9 @@ export default function CharacterCreator() {
       )}
 
       {currentStep === 6 && (
-        <Summary 
-          onConfirm={handleFinish} 
-          onBack={handleBack} 
+        <Summary
+          onConfirm={handleFinish}
+          onBack={handleBack}
           isSaving={isSaving}
           saveError={saveError}
         />

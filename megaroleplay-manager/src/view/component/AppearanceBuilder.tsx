@@ -1,4 +1,5 @@
 import { AppearanceSelection } from "../../model/character";
+import { useCreatorStore } from '../../controller/store/useStore';
 
 const ASSETS = {
   base: ['01'],
@@ -12,41 +13,46 @@ const ASSETS = {
 interface Props {
   selection: AppearanceSelection;
   onChange: (selection: AppearanceSelection) => void;
+  name: string;
+  onNameChange: (name: string) => void;
+  pronouns?: string;
+  onPronounsChange?: (pronouns: string) => void;
   onNext: () => void;
   onBack: () => void;
 }
 
-export default function AppearanceBuilder({ selection, onChange, onNext, onBack }: Props) {
+export default function AppearanceBuilder({ selection, onChange, name, onNameChange, pronouns, onPronounsChange, onNext, onBack }: Props) {
   
-  // Helper to cycle through options
-  const cycleOptionPlus = (category: keyof AppearanceSelection) => {
+  const { setAppearance, setName, setPronouns } = useCreatorStore();
+
+  // cycle through options
+  const cycleOption = (category: keyof AppearanceSelection, direction: 1 | -1) => {
     const current = selection[category];
     const options = ASSETS[category as keyof typeof ASSETS];
-    const currentIndex = options.indexOf(current);
-    const nextIndex = (currentIndex + 1) % options.length;
-    
-    onChange({
+    const index = options.indexOf(current);
+    const nextIndex = (index + direction + options.length) % options.length;
+    const updated = {
       ...selection,
       [category]: options[nextIndex],
-    });
+    };
+
+    onChange(updated);
+    setAppearance({ [category]: options[nextIndex] });
   };
 
-  const cycleOptionMinus = (category: keyof AppearanceSelection) => {
-    const current = selection[category];
-    const options = ASSETS[category as keyof typeof ASSETS];
-    const currentIndex = options.indexOf(current);
-    const prevIndex = (currentIndex - 1 + options.length) % options.length;
-    
-    onChange({
-      ...selection,
-      [category]: options[prevIndex],
-    });
-  };
+  const cycleOptionPlus = (category: keyof AppearanceSelection) => cycleOption(category, 1);
+  const cycleOptionMinus = (category: keyof AppearanceSelection) => cycleOption(category, -1);
+
+  // Regex for letters (including diacritics), spaces, apostrophes and hyphens, 1-30 characters
+  const namePattern = /^[A-Za-zÀ-ÖØ-öø-ÿ' -]{1,30}$/;
+  const isNameValid = namePattern.test(name);
 
   return (
     <div className="card-large">
       <h2>Customize Appearance</h2>
         <div className="appearance-builder">
+          <div className="appearance-preview-container">
+            
             {/* --- PREVIEW AREA --- */}
             <div className="appearance-preview">
                 {/* Layer 1: Body (Base) */}
@@ -83,7 +89,33 @@ export default function AppearanceBuilder({ selection, onChange, onNext, onBack 
                 />
                 <div className="appearance-preview-overlay"></div> {/* Protects the image from being grabbed */}
             </div>
-
+            <input 
+              type="text" 
+              placeholder="Name (required, 1-30 letters)" 
+              maxLength={30}
+              value={name}
+              onChange={(e) => {
+                onNameChange(e.target.value);
+                setName(e.target.value);
+              }}
+              required 
+            />
+            <input
+              type="text"
+              placeholder="Pronouns (optional)"
+              maxLength={30}
+              value={pronouns ?? ''}
+              onChange={(e) => {
+                onPronounsChange?.(e.target.value);
+                setPronouns(e.target.value);
+              }}
+            />
+            {!isNameValid && name.length > 0 && (
+              <div>
+                Name may only contain letters, apostrophes, and hyphens.
+              </div>
+            )}
+          </div>
             {/* --- CONTROLS AREA --- */}
             <div className="appearance-controls">
                 {(['base', 'eyes', 'mouth', 'hair', 'ears', 'bangs'] as const).map((category) => (
@@ -113,8 +145,11 @@ export default function AppearanceBuilder({ selection, onChange, onNext, onBack 
         <button onClick={onBack}>
           Back
         </button>
-        <button onClick={onNext}>
-          Next: Summary
+        <button
+          onClick={() => { if (isNameValid) onNext(); }}
+          disabled={!isNameValid}
+        >
+          Next
         </button>
       </div>
     </div>

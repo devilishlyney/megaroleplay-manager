@@ -11,7 +11,7 @@ export interface RawStats {
 }
 
 export interface FinalStats extends RawStats {
-  // You might add modifiers or calculated values here later
+  // stats after bonuses
 }
 
 // --- Appearance Types ---
@@ -29,6 +29,7 @@ export interface Character {
   
   // Identity
   name: string;
+  pronouns?: string;
   race: string;              // e.g., "Human", "Elf"
   class: string;             // e.g., "Warrior", "Mage"
   

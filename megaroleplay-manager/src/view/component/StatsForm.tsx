@@ -1,5 +1,4 @@
 import { useEffect } from 'react';
-import { useNavigate } from "react-router-dom";
 import { useCreatorStore } from '../../controller/store/useStore';
 import { 
   RawStats, 
@@ -11,7 +10,7 @@ import {
   getStatCost
 } from '../../controller/util/dndRules';
 
-// Default stats if nothing in store yet
+// default stats if nothing in store yet
 const EMPTY_STATS: RawStats = {
   strength: 8,
   dexterity: 8,
@@ -31,9 +30,7 @@ const STAT_LABELS: Record<StatName, string> = {
 };
 
 export default function StatsForm({ onNext, onBack }: { onNext?: (stats: RawStats) => void; onBack?: () => void }) {
-  const navigate = useNavigate();
-  
-  // Get everything directly from Store (No local state!)
+  // Get data from zustand store
   const { rawStats, setStats, setStep } = useCreatorStore();
   
   // Use saved stats or empty default
@@ -64,7 +61,7 @@ export default function StatsForm({ onNext, onBack }: { onNext?: (stats: RawStat
     setStats(newStats);
   };
 
-  const handleNextClick = () => {
+  const handleNextClick = () => { // prevent going to next step if points are not fully spent, but should not be possible since the button would be disabled
     if (pointsRemaining !== 0) {
       alert(`You must spend exactly ${TOTAL_POINTS} points. You have ${pointsRemaining} remaining.`);
       return;
@@ -73,14 +70,13 @@ export default function StatsForm({ onNext, onBack }: { onNext?: (stats: RawStat
     // Move to next step
     setStep(2);
     
-    // Optional callback
+    // callback
     if (onNext) onNext(stats);
   };
 
   return (
     <main className="container">
       <div className="card">
-        <button onClick={() => onBack ? onBack() : navigate("/")}>Back</button>
         <h2>Adjust your character's raw stats!</h2>
         
         <div className="stats-container">
@@ -121,25 +117,26 @@ export default function StatsForm({ onNext, onBack }: { onNext?: (stats: RawStat
             <span>Points Used : </span>
             <span>{pointsUsed} / {TOTAL_POINTS}</span>
           </div>
-          <div>
-            <span>Remaining : </span>
-            <span>{pointsRemaining}</span>
-          </div>
+          {pointsRemaining !== 0 && (
+            <p>
+              All {pointsRemaining} remaining points must be used.
+            </p>
+          )}
         </div>
 
-        {pointsRemaining !== 0 && (
-          <div style={{ color: 'red', marginTop: '10px' }}>
-            You have {pointsRemaining} points remaining. Spend them all!
-          </div>
-        )}
-
-        <button 
-          onClick={handleNextClick} 
-          disabled={pointsRemaining !== 0}
-          className="next-button"
-        >
-          Next: Appearance
-        </button>
+        <div>
+          <button onClick={onBack} className="back-button">
+            Back
+          </button>
+          <button 
+            onClick={handleNextClick} 
+            disabled={pointsRemaining !== 0}
+            className="next-button"
+          >
+            Next
+          </button>
+        </div>
+        
       </div>
     </main>
   );

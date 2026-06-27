@@ -12,8 +12,7 @@ function Home() {
           <h3>The Unofficial D&D Management Tool</h3>
         </div>
         <div className="nav-btn-title">
-          <button onClick={() => navigate("/create")}>Create a character</button>
-          <button onClick={() => navigate("/characters")}>Your characters</button>
+          <button onClick={() => navigate("/characters")}>Characters</button>
           <button onClick={() => navigate("/dungeon")}>Enter the Dungeon</button>
           <button onClick={() => navigate("/settings")}>Settings</button>
         </div>

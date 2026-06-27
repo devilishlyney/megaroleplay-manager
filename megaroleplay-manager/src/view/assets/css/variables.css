@@ -4,8 +4,9 @@
   --tertiary: #bedddc; /* à changer */
   --background: #e7f9f9;
   --text: #5a878a;
-  --highlight: #ff0080;
+  --highlight: #00aeff;
 
+  --font-xs: 16px;
   --font-s: 24px;
   --font-m: 48px;
   --font-l: 64px;

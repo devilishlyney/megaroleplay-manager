@@ -36,9 +36,6 @@ export function calculatePointsUsed(stats: RawStats): number {
 // Check if the current allocation is valid
 export function isValidAllocation(stats: RawStats): boolean {
   const used = calculatePointsUsed(stats);
-  // Must use exactly 27 points (or less if you want to allow saving points, but D&D usually requires using all)
-  // Usually, you can't go over. Let's enforce <= 27 for flexibility, or == 27 for strictness.
-  // Strict D&D: You must spend exactly 27.
   return used <= TOTAL_POINTS; 
 }
 
