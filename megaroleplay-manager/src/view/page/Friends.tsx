@@ -10,6 +10,7 @@ import {
   type Friend,
   type PendingRequest
 } from '../../controller/service/friendService';
+import { useAuth } from '../../controller/context/AuthContext';
 
 export default function Friends() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -19,6 +20,7 @@ export default function Friends() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
+  const { user } = useAuth();
 
   const loadData = useCallback(async () => {
     try {
@@ -43,7 +45,7 @@ export default function Friends() {
     setLoading(true);
     setError(null);
     try {
-      const results = await searchUsers(searchQuery, '');
+      const results = await searchUsers(searchQuery, user?.id);
       setSearchResults(results);
     } catch (err: any) {
       setError(err.message);
@@ -92,9 +94,9 @@ export default function Friends() {
     }
   };
 
-  return (
+  return ( // Page layout
     <main className="friends-page">
-      <div className="friends-container">
+      <div className="card">
         <h1 className="friends-title">Friends</h1>
 
         {error && <div className="friends-alert error">{error}</div>}
@@ -108,7 +110,7 @@ export default function Friends() {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search by username or display name..."
+              placeholder="Search by username"
               className="search-input"
             />
             <button type="submit" disabled={loading} className="search-btn">
@@ -119,11 +121,11 @@ export default function Friends() {
           {searchResults.length > 0 && (
             <div className="user-list">
               {searchResults.map((user) => (
-                <div key={user.id} className="user-card">
+                <div key={user.id}>
                   <div className="user-info">
                     <span className="user-name">{user.display_name || user.username || 'Unknown'}</span>
                     {user.username && (
-                      <span className="user-username">@{user.username}</span>
+                      <span className="user-username">(@{user.username})</span>
                     )}
                   </div>
                   <button
@@ -147,11 +149,11 @@ export default function Friends() {
             </h2>
             <div className="user-list">
               {pendingRequests.map((req) => (
-                <div key={req.id} className="user-card">
+                <div key={req.id}>
                   <div className="user-info">
                     <span className="user-name">{req.requester.display_name || 'Unknown'}</span>
                     {req.requester.username && (
-                      <span className="user-username">@{req.requester.username}</span>
+                      <span className="user-username">(@{req.requester.username})</span>
                     )}
                   </div>
                   <div className="action-group">
@@ -176,27 +178,25 @@ export default function Friends() {
 
         {/* FRIENDS LIST SECTION */}
         <section className="friends-section">
-          <h2 className="section-title">
-            My Friends
-            <span className="badge">{friends.length}</span>
-          </h2>
+          <h2 className="section-title">My Friends ({friends.length})</h2>
+          
           {friends.length === 0 ? (
             <p className="empty-message">You don't have any friends yet. Start by searching above!</p>
           ) : (
             <div className="user-list">
               {friends.map((friend) => (
-                <div key={friend.friendshipId} className="user-card">
-                  <div className="user-info">
+                <div key={friend.friendshipId} className="block">
+                  <div>
                     <span className="user-name">{friend.display_name || 'Anonymous'}</span>
                     {friend.username && (
-                      <span className="user-username">@{friend.username}</span>
+                      <span className="user-username">(@{friend.username})</span>
                     )}
                   </div>
                   <button
                     onClick={() => handleRemove(friend.friendshipId)}
                     className="btn btn-danger-outline"
                   >
-                    Remove
+                    Unfriend
                   </button>
                 </div>
               ))}

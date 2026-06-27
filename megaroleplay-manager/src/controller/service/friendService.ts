@@ -19,40 +19,67 @@ export interface PendingRequest {
   }
 }
 
-// Search Users
-export async function searchUsers(query: string, currentUserId: string) {
-  const { data, error } = await supabase
+// --- Search Users ---
+export async function searchUsers(query: string, currentUserId?: string) {
+  let builder = supabase
     .from('public_profiles')
     .select('id, username, display_name')
     .or(`username.ilike.%${query}%,display_name.ilike.%${query}%`)
-    .neq('id', currentUserId)
     .limit(10)
 
+  // Only exclude current user if ID was provided
+  if (currentUserId && currentUserId.trim() !== '') {
+    builder = builder.neq('id', currentUserId)
+  }
+
+  const { data, error } = await builder
+
   if (error) throw error
-  
-  return (data || []).map(p => ({
+
+  return (data || []).map((p: any) => ({
     id: p.id,
     username: p.username,
     display_name: p.display_name || p.username
   }))
 }
 
-// Send Friend Request
+// --- Send Friend Request ---
 export async function sendFriendRequest(addresseeId: string) {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) throw new Error('Not authenticated')
 
-  // Check if friendship exists
-  const { data: existing, error: checkError } = await supabase
+  // Check Direction 1: Current user → Addressee
+  const { data: existing1, error: error1 } = await supabase
     .from('friendships')
-    .select('id, status')
-    .or(`requester_id.eq.${user.id}.and.addressee_id.eq.${addresseeId},requester_id.eq.${addresseeId}.and.addressee_id.eq.${user.id}`)
-    .maybeSingle()
+    .select('status')
+    .eq('requester_id', user.id)
+    .eq('addressee_id', addresseeId)
+    .single()
 
-  if (checkError && checkError.code !== 'PGRST116') throw checkError // PGRST116 = no rows found
+  // Check Direction 2: Addressee → Current user
+  const { data: existing2, error: error2 } = await supabase
+    .from('friendships')
+    .select('status')
+    .eq('requester_id', addresseeId)
+    .eq('addressee_id', user.id)
+    .single()
+
+  // Handle "not found" errors (expected when no friendship exists)
+  const status1 = (existing1 as any)?.status
+  const status2 = (existing2 as any)?.status
   
-  if ((existing as any)?.status === 'accepted') {
+  if ((error1?.code !== 'PGRST116') && !(existing1)) {
+    // Only throw if actual error, not "no rows"
+  }
+  if ((error2?.code !== 'PGRST116') && !(existing2)) {
+    // Only throw if actual error, not "no rows"
+  }
+
+  if (status1 === 'accepted' || status2 === 'accepted') {
     throw new Error('Already friends with this user.')
+  }
+  if (status1 === 'pending' || status2 === 'pending') {
+    throw new Error('Friend request already pending.')
   }
 
   const { data, error } = await supabase
@@ -69,7 +96,7 @@ export async function sendFriendRequest(addresseeId: string) {
   return data
 }
 
-// Accept Friend Request
+// --- Accept Friend Request ---
 export async function acceptFriendRequest(friendshipId: string) {
   const { data, error } = await supabase
     .from('friendships')
@@ -82,19 +109,17 @@ export async function acceptFriendRequest(friendshipId: string) {
   return data
 }
 
-// Decline/Remove Friend Request
+// --- Decline Friend Request ---
 export async function declineFriendRequest(friendshipId: string) {
-  const { data, error } = await supabase
+  const { error } = await supabase
     .from('friendships')
     .delete()
     .eq('id', friendshipId)
-    .select()
-    .single()
 
   if (error) throw error
-  return data
 }
 
+// --- Remove Friend ---
 export async function removeFriend(friendshipId: string) {
   const { error } = await supabase
     .from('friendships')
@@ -104,62 +129,86 @@ export async function removeFriend(friendshipId: string) {
   if (error) throw error
 }
 
-// Get Accepted Friends
+// --- Get Accepted Friends (Two-Query Approach) ---
 export async function getFriends() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) throw new Error('Not authenticated')
 
-  const { data, error } = await supabase
+  // Step 1: Get all accepted friendships
+  const { data: friendships, error: fError } = await supabase
     .from('friendships')
-    .select(`
-      id,
-      requester_id,
-      addressee_id,
-      requester_public_profile:public_profiles!inner(display_name, username),
-      addressee_public_profile:public_profiles!inner(display_name, username)
-    `)
+    .select('id, requester_id, addressee_id')
     .or(`requester_id.eq.${user.id},addressee_id.eq.${user.id}`)
     .eq('status', 'accepted')
-    .order('updated_at', { ascending: false })
 
-  if (error) throw error
+  if (fError) throw fError
+  if (!friendships || friendships.length === 0) return []
 
-  return (data || []).map((f: any) => {
-    const friendData = f.requester_id === user.id ? f.addressee_public_profile : f.requester_public_profile
+  // Step 2: Extract friend IDs
+  const friendIds = friendships.map((f: any) =>
+    f.requester_id === user.id ? f.addressee_id : f.requester_id
+  )
+
+  // Step 3: Fetch all profiles at once
+  const { data: profiles, error: pError } = await supabase
+    .from('public_profiles')
+    .select('id, username, display_name')
+    .in('id', friendIds)
+
+  if (pError) throw pError
+
+  // Step 4: Match manually
+  return friendships.map((f: any) => {
+    const friendId = f.requester_id === user.id ? f.addressee_id : f.requester_id
+    const profile = profiles?.find((p: any) => p.id === friendId)
     return {
       friendshipId: f.id,
-      friendId: f.requester_id === user.id ? f.addressee_id : f.requester_id,
-      display_name: (friendData?.[0]?.display_name as string | undefined) ?? 'Anonymous',
-      username: (friendData?.[0]?.username as string | undefined) ?? null
+      friendId: friendId,
+      display_name: profile?.display_name || 'Anonymous',
+      username: profile?.username || null
     }
   })
 }
 
-// Get Pending Requests
+// --- Get Pending Requests (Two-Query Approach) ---
 export async function getPendingRequests() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) throw new Error('Not authenticated')
 
-  const { data, error } = await supabase
+  // Step 1: Get all pending requests addressed to current user
+  const { data: requests, error: rError } = await supabase
     .from('friendships')
-    .select(`
-      *,
-      requester_public_profile:public_profiles!inner(id, display_name, username)
-    `)
+    .select('id, requester_id, addressee_id, status')
     .eq('addressee_id', user.id)
     .eq('status', 'pending')
     .order('created_at', { ascending: false })
 
-  if (error) throw error
+  if (rError) throw rError
+  if (!requests || requests.length === 0) return []
 
-  return (data || []).map((req: any) => ({
-    id: req.id,
-    requester_id: req.requester_id,
-    status: req.status,
-    requester: {
-      id: req.requester_id,
-      display_name: (req.requester_public_profile?.[0]?.display_name as string | undefined) ?? 'Unknown',
-      username: (req.requester_public_profile?.[0]?.username as string | undefined) ?? null
+  // Step 2: Extract requester IDs
+  const requesterIds = requests.map((r: any) => r.requester_id)
+
+  // Step 3: Fetch all requester profiles at once
+  const { data: profiles, error: pError } = await supabase
+    .from('public_profiles')
+    .select('id, username, display_name')
+    .in('id', requesterIds)
+
+  if (pError) throw pError
+
+  // Step 4: Match manually
+  return requests.map((r: any) => {
+    const profile = profiles?.find((p: any) => p.id === r.requester_id)
+    return {
+      id: r.id,
+      requester_id: r.requester_id,
+      status: r.status,
+      requester: {
+        id: r.requester_id,
+        display_name: profile?.display_name || 'Unknown',
+        username: profile?.username || null
+      }
     }
-  }))
+  })
 }
