@@ -7,6 +7,7 @@ import CharacterEditor from './view/page/CharacterEditor'
 import UserProfile from './view/page/UserProfile'
 import UserCharacters from './view/page/UserCharacters'
 import Friends from './view/page/Friends'
+import Profile from './view/page/Profile'
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
         <Route path="/profile" element={<UserProfile />} />
         <Route path="/characters" element={<UserCharacters />} />
         <Route path="/friends" element={<Friends />} />
+        <Route path="/profile/:userId" element={<Profile />} />
       </Route>
       
       {/* Catch all */}

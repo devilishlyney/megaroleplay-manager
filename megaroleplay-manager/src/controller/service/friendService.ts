@@ -2,6 +2,7 @@ import { supabase } from './supabase'
 
 // --- Types ---
 export interface Friend {
+  id: any
   friendshipId: string
   friendId: string
   display_name: string | null
@@ -64,7 +65,7 @@ export async function sendFriendRequest(addresseeId: string) {
     .eq('addressee_id', user.id)
     .single()
 
-  // Handle "not found" errors (expected when no friendship exists)
+  // Handle "not found" errors
   const status1 = (existing1 as any)?.status
   const status2 = (existing2 as any)?.status
   

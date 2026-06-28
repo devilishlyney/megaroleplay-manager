@@ -6,6 +6,10 @@
   --text: #5a878a;
   --highlight: #00aeff;
 
+  --primary-danger: #ffcccc;
+  --secondary-danger: #ff9999;
+  --tertiary-danger: #ff9191;
+
   --font-xs: 16px;
   --font-s: 24px;
   --font-m: 48px;
@@ -22,4 +26,8 @@
     --tertiary: #201d3a;
     --background: #1d1d1d;
     --text: #F3F4F4;
+
+    --primary-danger: #6b3232;
+    --secondary-danger: #9b4848;
+    --tertiary-danger: #b35d5d;
 }

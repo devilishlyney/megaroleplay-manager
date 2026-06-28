@@ -12,6 +12,7 @@
   margin: 0;
   user-select: none;
   -webkit-user-select: none;
+  text-decoration: none;
 }
 
 body {
@@ -48,6 +49,11 @@ header button {
   border: 1px solid var(--primary);
   background-color: var(--secondary);
   color: var(--text);
+}
+
+header button.danger {
+  background-color: var(--primary-danger);
+  border: 1px solid var(--tertiary-danger);
 }
 
 table, th, td {
@@ -132,6 +138,19 @@ h3 {
   border-radius: var(--border-card);
 }
 
+.friend {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.user-list {
+  padding: 1em;
+  background-color: var(--tertiary);
+  margin: 1em;
+  border-radius: var(--border-card);
+}
+
 .controls {
   display: flex;
   flex-direction: row;
@@ -162,6 +181,11 @@ button {
   padding: 0.75em 1.25em;
   border-radius: var(--border-button);
   border: 1px solid var(--tertiary);
+}
+
+button.danger {
+  background-color: var(--secondary-danger);
+  border: 1px solid var(--primary-danger);
 }
 
 button:disabled {
@@ -214,10 +238,10 @@ button:disabled {
   gap: 1em;
 }
 
-.svg-icon {
-  width: 1em;
-  height: 1em;
-  vertical-align: middle;
+.action {
+  padding: 12px 16px;
+  border-radius: 50%;
+  margin: 0 10px;
 }
 
 /* ===========================================================
@@ -267,6 +291,11 @@ input:focus {
   width: 375px;
 }
 
+.search-form {
+  display: flex;
+  flex-direction: row;
+}
+
 /* ===========================================================
    Images
    =========================================================== */
@@ -312,7 +341,7 @@ input:focus {
 
 .avatar-container {
   position: relative;
-  width: 50%;
+  width: 16vw;
 }
 
 .avatar-container > img {
@@ -330,12 +359,12 @@ input:focus {
   height: 100%;
   width: 100%;
   opacity: 0;
-  transition: .5s ease;
+  transition: 0.5s ease;
   background-color: #000000;
 }
 
 .avatar-container:hover .avatar-overlay {
-  opacity: 0.5;
+  opacity: 0.75;
 }
 
 .avatar-overlay > .text {

@@ -6,6 +6,7 @@ import Header from './view/component/Header';
 import "./view/assets/css/App.css";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { AuthProvider } from './controller/context/AuthContext';
+import HomeButton from "./view/component/home-button/HomeButton";
 
 const queryClient = new QueryClient()
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
@@ -13,6 +14,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <BrowserRouter>
+          <HomeButton />
           <Header />
           <App />
         </BrowserRouter>

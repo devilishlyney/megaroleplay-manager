@@ -1,11 +1,9 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../controller/context/AuthContext";
 import { useAvatarUpload } from "../../controller/hook/useAvatarUpload";
 import { updateUserDisplayName } from "../../controller/service/authService";
 
 function UserProfile() {
-  const navigate = useNavigate();
   const { user } = useAuth();
   const { fileInputRef, avatarUrl, handleAvatarClick, handleFileSelect, isLoading } =
     useAvatarUpload();
@@ -72,14 +70,12 @@ function UserProfile() {
             onChange={(e) => setDisplayName(e.target.value)}
             disabled={isSavingName}
           />
-          <button onClick={handleSaveDisplayName} disabled={isSavingName}>
-            {isSavingName ? "Saving..." : "Save"}
+          <button onClick={handleSaveDisplayName} disabled={isSavingName} className="action">
+            <span className="material-symbols-outlined">
+            save
+            </span>
           </button>
           {nameMessage && <p>{nameMessage}</p>}
-        </div>
-
-        <div>
-          <button onClick={() => navigate("/")} disabled={isLoading}>Back to dashboard</button>
         </div>
       </div>
     </main>

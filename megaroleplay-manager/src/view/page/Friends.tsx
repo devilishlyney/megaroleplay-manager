@@ -29,7 +29,7 @@ export default function Friends() {
         getFriends()
       ]);
       setPendingRequests(pending);
-      setFriends(friendsList);
+      setFriends(friendsList.map(f => ({ ...f, id: f.friendId })));
     } catch (err: any) {
       setError(err.message);
     }
@@ -113,26 +113,30 @@ export default function Friends() {
               placeholder="Search by username"
               className="search-input"
             />
-            <button type="submit" disabled={loading} className="search-btn">
-              {loading ? 'Searching...' : 'Search'}
+            <button type="submit" disabled={loading} className="action">
+              <span className="material-symbols-outlined">
+              search
+              </span>
             </button>
           </form>
 
           {searchResults.length > 0 && (
             <div className="user-list">
               {searchResults.map((user) => (
-                <div key={user.id}>
-                  <div className="user-info">
+                <div key={user.id} className="friend">
+                  <div>
                     <span className="user-name">{user.display_name || user.username || 'Unknown'}</span>
                     {user.username && (
-                      <span className="user-username">(@{user.username})</span>
+                      <span className="user-username"> (@{user.username})</span>
                     )}
                   </div>
                   <button
                     onClick={() => handleSendRequest(user.id)}
-                    className="btn btn-primary"
+                    className="action"
                   >
-                    Add Friend
+                  <span className="material-symbols-outlined">
+                  person_add
+                  </span>
                   </button>
                 </div>
               ))}
@@ -143,31 +147,31 @@ export default function Friends() {
         {/* PENDING REQUESTS SECTION */}
         {pendingRequests.length > 0 && (
           <section className="friends-section">
-            <h2 className="section-title">
-              Pending Requests
-              <span className="badge">{pendingRequests.length}</span>
-            </h2>
+            <h2 className="section-title">Pending Requests ({pendingRequests.length})</h2>
             <div className="user-list">
               {pendingRequests.map((req) => (
                 <div key={req.id}>
                   <div className="user-info">
                     <span className="user-name">{req.requester.display_name || 'Unknown'}</span>
                     {req.requester.username && (
-                      <span className="user-username">(@{req.requester.username})</span>
+                      <span className="user-username"> (@{req.requester.username})</span>
                     )}
                   </div>
                   <div className="action-group">
                     <button
-                      onClick={() => handleAccept(req.id)}
-                      className="btn btn-success"
+                      onClick={() => handleAccept(req.id)} className="action"
                     >
-                      Accept
+                      <span className="material-symbols-outlined">
+                      check
+                      </span>
                     </button>
                     <button
                       onClick={() => handleDecline(req.id)}
-                      className="btn btn-danger"
+                      className="danger action"
                     >
-                      Decline
+                      <span className="material-symbols-outlined">
+                      close
+                      </span>
                     </button>
                   </div>
                 </div>
@@ -185,18 +189,22 @@ export default function Friends() {
           ) : (
             <div className="user-list">
               {friends.map((friend) => (
-                <div key={friend.friendshipId} className="block">
+                <div key={friend.friendshipId} className="block friend">
                   <div>
-                    <span className="user-name">{friend.display_name || 'Anonymous'}</span>
-                    {friend.username && (
-                      <span className="user-username">(@{friend.username})</span>
-                    )}
+                    <a href={`/profile/${friend.id}`} className="user-link">
+                      <span className="user-name">{friend.display_name || 'Anonymous'}</span>
+                      {friend.username && (
+                        <span className="user-username"> (@{friend.username})</span>
+                      )}
+                    </a>
                   </div>
                   <button
                     onClick={() => handleRemove(friend.friendshipId)}
-                    className="btn btn-danger-outline"
+                    className="danger action"
                   >
-                    Unfriend
+                  <span className="material-symbols-outlined">
+                  person_remove
+                  </span>
                   </button>
                 </div>
               ))}

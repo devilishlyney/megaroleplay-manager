@@ -15,8 +15,14 @@ function Header() {
         <ThemeToggle />
         {user && location.pathname !== '/login' && ( // sign out only appears if user is logged in
           <> 
-            <button onClick={() => signOut()}>Sign out</button>
-            <button onClick={() => navigate('/friends')}>Friends</button>
+            <button onClick={() => navigate('/friends')}><span className="material-symbols-outlined">
+            group
+            </span></button>
+            <button onClick={() => signOut()} className="danger">
+              <span className="material-symbols-outlined">
+              logout
+              </span>
+            </button>
             <img onClick={() => navigate("/profile")} src={avatarUrl} alt="Profile" className="profile-pic" />
           </>
         )}

@@ -50,7 +50,9 @@ export default function UserCharacters() {
       <div className="card-large">
         <h2>Your Characters</h2>
 
-        <button onClick={() => navigate('/create')}>Create Character</button>
+        <button onClick={() => navigate('/create')}><span className="material-symbols-outlined">
+        add
+        </span></button>
         {error ? (
           <div className="error">Error loading characters: {error}</div>
         ) : deleteError ? (
@@ -79,12 +81,17 @@ export default function UserCharacters() {
                 <td>{character.class}</td>
                 <td>{character.lore || 'No backstory has been added.'}</td>
                 <td>
-                    <button onClick={() => navigate(`/characters/${character.id}/edit`)}>Edit</button>
+                    <button onClick={() => navigate(`/characters/${character.id}/edit`)} className="action"><span className="material-symbols-outlined">
+                    edit
+                    </span></button>
                     <button
                       onClick={() => handleDelete(character.id, character.name)}
                       disabled={deletingId === character.id}
+                      className="action danger"
                     >
-                      {deletingId === character.id ? 'Deleting...' : 'Delete'}
+                      <span className="material-symbols-outlined">
+                      delete
+                      </span>
                     </button>
                 </td>
               </tr>
@@ -93,11 +100,6 @@ export default function UserCharacters() {
         ) : (
           <p>No saved characters yet.</p>
         )}
-
-        <div className="page-actions">
-          
-          <button onClick={() => navigate('/')}>Back to home</button>
-        </div>
       </div>
     </main>
   )
