@@ -8,6 +8,9 @@ import UserProfile from './view/page/UserProfile'
 import UserCharacters from './view/page/UserCharacters'
 import Friends from './view/page/Friends'
 import Profile from './view/page/Profile'
+import CampaignForm from './view/page/CampaignForm'
+import CampaignList from './view/page/CampaignList'
+import CampaignDetail from './view/page/CampaignDetail'
 
 function App() {
   return (
@@ -25,6 +28,10 @@ function App() {
         <Route path="/characters" element={<UserCharacters />} />
         <Route path="/friends" element={<Friends />} />
         <Route path="/profile/:userId" element={<Profile />} />
+        <Route path="/campaigns" element={<CampaignList />} />
+        <Route path="/campaigns/new" element={<CampaignForm />} />
+        <Route path="/campaigns/:campaignId" element={<CampaignDetail />} />
+        <Route path="/campaigns/:campaignId/edit" element={<CampaignForm editMode />} />
       </Route>
       
       {/* Catch all */}

@@ -28,6 +28,8 @@ export interface AppearanceSelection {
 export interface Character {
   
   // Identity
+  id?: string;
+  ownerId?: string;
   name: string;
   pronouns?: string;
   race: string;              // e.g., "Human", "Elf"

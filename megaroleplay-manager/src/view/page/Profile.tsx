@@ -80,7 +80,7 @@ export default function Profile() {
 
         {/* Avatar Section */}
         <div className="profile-avatar-section">
-          <div className="profile-avatar-wrapper">
+          <div className="avatar-container">
             {profile.avatar_url ? (
               <img 
                 src={profile.avatar_url} 
@@ -100,7 +100,7 @@ export default function Profile() {
           <div className="profile-meta">
             {profile.created_at && (
               <div className="meta-item">
-                <span className="meta-label">Member since:</span>
+                <span className="meta-label">Member since : </span>
                 <span className="meta-value">
                   {new Date(profile.created_at).toLocaleDateString()}
                 </span>
