@@ -11,6 +11,9 @@ import Profile from './view/page/Profile'
 import CampaignForm from './view/page/CampaignForm'
 import CampaignList from './view/page/CampaignList'
 import CampaignDetail from './view/page/CampaignDetail'
+import DiceRoller from './view/component/DiceRoller';
+import SharedCharacters from './view/component/SharedCharacters';
+
 
 function App() {
   return (
@@ -32,6 +35,8 @@ function App() {
         <Route path="/campaigns/new" element={<CampaignForm />} />
         <Route path="/campaigns/:campaignId" element={<CampaignDetail />} />
         <Route path="/campaigns/:campaignId/edit" element={<CampaignForm editMode />} />
+        <Route path="/dice" element={<DiceRoller />} />
+        <Route path="/shared" element={<SharedCharacters />} />
       </Route>
       
       {/* Catch all */}

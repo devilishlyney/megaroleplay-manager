@@ -30,6 +30,7 @@ export interface Character {
   // Identity
   id?: string;
   ownerId?: string;
+  shared_from_id?: string | null;
   name: string;
   pronouns?: string;
   race: string;              // e.g., "Human", "Elf"

@@ -36,21 +36,21 @@ export default function CampaignList() {
   if (loading) return <div>Loading...</div>;
 
   return (
-    <div>
-      <h1>Campaigns</h1>
+    <div className="card-large">
+      <h2>Campaigns</h2>
       <button onClick={() => navigate('/campaigns/new')}>Create New Campaign</button>
       
       {campaigns.length === 0 && <p>No campaigns yet.</p>}
       
       {campaigns.map(camp => (
         <div key={camp.id}>
-          <h2>{camp.name}</h2>
+          <h3>{camp.name}</h3>
           <p>{camp.description}</p>
           <span>Status: {camp.status}</span>
           
-          <button onClick={() => navigate(`/campaigns/${camp.id}`)}>View</button>
-          <button onClick={() => navigate(`/campaigns/${camp.id}/edit`)}>Edit</button>
-          <button onClick={() => handleDelete(camp.id!)}>Delete</button>
+          <button onClick={() => navigate(`/campaigns/${camp.id}`)} className="action"><span className="material-symbols-outlined">info</span></button>
+          <button onClick={() => navigate(`/campaigns/${camp.id}/edit`)} className="action"><span className="material-symbols-outlined">edit</span></button>
+          <button onClick={() => handleDelete(camp.id!)} className="danger action"><span className="material-symbols-outlined">delete</span></button>
         </div>
       ))}
     </div>

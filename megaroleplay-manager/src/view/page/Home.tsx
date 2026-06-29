@@ -14,7 +14,7 @@ function Home() {
         <div className="nav-btn-title">
           <button onClick={() => navigate("/characters")}>Characters</button>
           <button onClick={() => navigate("/campaigns")}>Campaigns</button>
-          <button onClick={() => navigate("/dungeon")}>Enter the Dungeon</button>
+          <button onClick={() => navigate("/dice")}>Dice Rolls</button>
           <button onClick={() => navigate("/settings")}>Settings</button>
         </div>
       </div>

@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../controller/context/AuthContext'
 import { useCharacters } from '../../controller/hook/useCharacters'
 import CharacterPortrait from '../component/CharacterPortrait'
+import ShareCharacterModal from '../component/ShareCharacterModal'
 import { deleteCharacter } from '../../controller/service/characterService'
 import { useState } from 'react'
 
@@ -11,6 +12,9 @@ export default function UserCharacters() {
   const { characters, loading: charactersLoading, error } = useCharacters(user?.id)
   const [deletingId, setDeletingId] = useState<string | null>(null)
   const [deleteError, setDeleteError] = useState<string | null>(null)
+  const [sharingCharacterId, setSharingCharacterId] = useState<string | null>(null)
+  const [sharingCharacterName, setSharingCharacterName] = useState<string | null>(null)
+  const [showShareModal, setShowShareModal] = useState(false)
 
   // Character deletion
   const handleDelete = async (characterId?: string, characterName?: string) => {
@@ -81,6 +85,18 @@ export default function UserCharacters() {
                 <td>{character.class}</td>
                 <td>{character.lore || 'No backstory has been added.'}</td>
                 <td>
+                    <button
+                      onClick={() => {
+                        setSharingCharacterId(character.id ?? null)
+                        setSharingCharacterName(character.name)
+                        setShowShareModal(true)
+                      }}
+                      className="action"
+                    >
+                      <span className="material-symbols-outlined">
+                      share
+                      </span>
+                    </button>
                     <button onClick={() => navigate(`/characters/${character.id}/edit`)} className="action"><span className="material-symbols-outlined">
                     edit
                     </span></button>
@@ -93,6 +109,7 @@ export default function UserCharacters() {
                       delete
                       </span>
                     </button>
+                    
                 </td>
               </tr>
             ))}
@@ -100,7 +117,19 @@ export default function UserCharacters() {
         ) : (
           <p>No saved characters yet.</p>
         )}
+
+        <button onClick={() => navigate("/shared")}>Shared characters</button>
       </div>
+
+      {showShareModal && sharingCharacterId && sharingCharacterName && (
+        <div className="modal-overlay">
+          <ShareCharacterModal
+            characterId={sharingCharacterId}
+            characterName={sharingCharacterName}
+            onClose={() => setShowShareModal(false)}
+          />
+        </div>
+      )}
     </main>
   )
 }

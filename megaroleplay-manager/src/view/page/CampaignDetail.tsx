@@ -107,7 +107,7 @@ export default function CampaignDetail() {
   if (!campaign) return <div>Campaign not found.</div>;
 
   return (
-    <div className="card">
+    <div className="card-large">
       <div>
         <span>Status: {campaign.status}</span>
         <select
@@ -124,7 +124,7 @@ export default function CampaignDetail() {
       {error && <div>{error}</div>}
 
       <section>
-        <h1>{campaign.name}</h1>
+        <h2>{campaign.name}</h2>
         {campaign.description && <p>{campaign.description}</p>}
 
         <div>
@@ -166,8 +166,8 @@ export default function CampaignDetail() {
                   <span>Role: {char.role.replace('_', ' ').toUpperCase()}</span>
                   <div>Joined: {formatDate(char.joined_at)}</div>
                 </div>
-                <button onClick={() => handleRemoveCharacter(char.id)}>
-                  Remove
+                <button onClick={() => handleRemoveCharacter(char.id)} className="danger action">
+                  <span className="material-symbols-outlined">delete</span>
                 </button>
               </div>
             ))}
