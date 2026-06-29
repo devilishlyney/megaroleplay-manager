@@ -109,7 +109,7 @@ export default function CampaignDetail() {
   return (
     <div className="card-large">
       <div>
-        <span>Status: {campaign.status}</span>
+        <span>Status: </span>
         <select
           value={campaign.status}
           onChange={(e) => handleUpdateStatus(e.target.value)}
@@ -123,7 +123,7 @@ export default function CampaignDetail() {
 
       {error && <div>{error}</div>}
 
-      <section>
+      <section className="minicard">
         <h2>{campaign.name}</h2>
         {campaign.description && <p>{campaign.description}</p>}
 
@@ -139,8 +139,8 @@ export default function CampaignDetail() {
         </div>
       </section>
 
-      <section>
-        <div>
+      <section className="minicard gap">
+        <div className="gap">
           <h2>Campaign Characters ({campaign.characters.length})</h2>
           <button
             onClick={() => {
@@ -155,9 +155,9 @@ export default function CampaignDetail() {
         {campaign.characters.length === 0 ? (
           <div>No characters assigned yet.</div>
         ) : (
-          <div>
+          <div className="gap">
             {campaign.characters.map((char, idx) => (
-              <div key={`${char.id}-${idx}`}>
+              <div key={`${char.id}-${idx}`} className="charcard">
                 <div>
                   <h3>{char.character_name}</h3>
                   <div>

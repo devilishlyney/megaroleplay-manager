@@ -42,8 +42,8 @@ export default function RacePicker({ onSelect, selectedRaceId, onBack, onNext }:
   }
 
   return (
-    <div className="race-picker-container">
-      <h3>Select Your Race</h3>
+    <div className="card">
+      <h3>Select a race/species</h3>
       <div className="race-grid">
         {races.map((race) => {
           const isSelected = selectedRaceId === race.name;
@@ -55,7 +55,7 @@ export default function RacePicker({ onSelect, selectedRaceId, onBack, onNext }:
               className={`race-button ${isSelected ? 'selected' : ''}`}>
               <span className="race-name">{race.name}</span>
               
-              <div className="race-details">
+              <div className="details">
                 {race.description}
               </div>
 

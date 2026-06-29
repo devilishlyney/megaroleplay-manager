@@ -45,7 +45,7 @@ export default function ShareCharacterModal({ characterId, characterName, onClos
 
   if (success) {
     return (
-      <div>
+      <div className="card-large">
         <p>Character "{characterName}" sent successfully!</p>
         <button onClick={onClose}>Close</button>
       </div>
@@ -53,8 +53,8 @@ export default function ShareCharacterModal({ characterId, characterName, onClos
   }
 
   return (
-    <div>
-      <div>
+    <div className="card-large">
+      <div className="gap">
         <h2>Share "{characterName}"</h2>
         {error && <p>{error}</p>}
 

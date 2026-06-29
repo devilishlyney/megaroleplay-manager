@@ -47,7 +47,7 @@ export default function ClassPicker({
   }
 
   return ( // Page layout
-    <div className="race-picker-container">
+    <div className="card">
       <h3>Select Your Class</h3>
       <div className="race-grid">
         {classes.map((charClass) => {
@@ -60,8 +60,8 @@ export default function ClassPicker({
               className={`race-button ${isSelected ? 'selected' : ''}`}
             >
               <span className="race-name">{charClass.name}</span><br />
-              {charClass.primary_stat && <span className="race-size">Known for their {charClass.primary_stat}. </span>}
-              {charClass.hit_die && <span>Uses a d{charClass.hit_die}.</span>}
+              {charClass.primary_stat && <span className="details">Known for their {charClass.primary_stat}. </span>}
+              {charClass.hit_die && <span className="details">Uses a d{charClass.hit_die}.</span>}
             </button>
           )
         })}

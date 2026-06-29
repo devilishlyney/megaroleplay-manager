@@ -43,14 +43,15 @@ export default function CampaignList() {
       {campaigns.length === 0 && <p>No campaigns yet.</p>}
       
       {campaigns.map(camp => (
-        <div key={camp.id}>
-          <h3>{camp.name}</h3>
+        <div key={camp.id} className="minicard gap">
+          <h3>"{camp.name}"</h3>
           <p>{camp.description}</p>
           <span>Status: {camp.status}</span>
-          
-          <button onClick={() => navigate(`/campaigns/${camp.id}`)} className="action"><span className="material-symbols-outlined">info</span></button>
-          <button onClick={() => navigate(`/campaigns/${camp.id}/edit`)} className="action"><span className="material-symbols-outlined">edit</span></button>
-          <button onClick={() => handleDelete(camp.id!)} className="danger action"><span className="material-symbols-outlined">delete</span></button>
+          <div>
+            <button onClick={() => navigate(`/campaigns/${camp.id}`)} className="action"><span className="material-symbols-outlined">info</span></button>
+            <button onClick={() => navigate(`/campaigns/${camp.id}/edit`)} className="action"><span className="material-symbols-outlined">edit</span></button>
+            <button onClick={() => handleDelete(camp.id!)} className="danger action"><span className="material-symbols-outlined">delete</span></button>
+          </div>
         </div>
       ))}
     </div>

@@ -116,6 +116,24 @@ h3 {
   gap: 3em;
 }
 
+.minicard {
+  background-color: var(--tertiary);
+  border-radius: var(--border-card);
+  padding: 3em;
+}
+
+.charcard {
+  background-color: var(--primary);
+  border-radius: var(--border-card);
+  padding: 0.5em;
+}
+
+.gap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+}
+
 .stats-value {
   padding: 0.5em;
 }
@@ -167,8 +185,14 @@ h3 {
   gap: 0.5em;
 }
 
-.race-details {
+.details {
   font-size: var(--font-xs);
+}
+
+.race-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
 }
 
 /* ===========================================================
